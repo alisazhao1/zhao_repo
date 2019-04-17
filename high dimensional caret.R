@@ -9,20 +9,22 @@ library(tidyverse)
 
 #import dataset 
 data = read.csv('orientation_data_sub-02_good_trials.csv',header = TRUE )
-data = data[,2:ncol(data)]
-data_pcr = data[,2:(ncol(data)-1)]
-# X_data = data[,2:(ncol(data)-1)]
-#Y_data = data[,ncol(data)]
-data$y1 =  as.factor(data$orientations ==  0)
-data$y2 = as.factor(data$orientations == 45)
-data$y3 =  as.factor(data$orientations == 90)
-data$y4 = as.factor(data$orientations == 135)
+head(data)
+summary(data$orientations)
+data <- data %>%
+  mutate(y1 =  as.factor(orientations ==  0)) %>%
+  mutate(y2 =  as.factor(orientations ==  45)) %>%
+  mutate(y3 =  as.factor(orientations ==  90)) %>%
+  mutate(y4 =  as.factor(orientations ==  135)) 
+
+head(data)
 
 #Step 1: splitting training set and test set
 train_index <- sample(1:nrow(data), 0.1 * nrow(data))
 train <- data[train_index,]
 test <- data[-train_index,]
 
+##Model 1
 #Step 2: run models using caret, k =5
 train_control <- trainControl(method = "cv", number = 5)
 
